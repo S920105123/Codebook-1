@@ -1,22 +1,21 @@
-/*產生fail function*/ 
-void kmp_fail(char *s,int len,int *fail){
-	int id=-1;
-	fail[0]=-1;
-	for(int i=1;i<len;++i){
-		while(~id&&s[id+1]!=s[i])id=fail[id];
-		if(s[id+1]==s[i])++id;
-		fail[i]=id;
+vector<int> lps; // longest prefix suffix, 0-based
+int match(const string &text, const string &pat) {
+	/* Init is included */
+	lps.resize(pat.size());	
+	/* DP */
+	lps[0]=0;
+	for (int i=1; i<pat.size(); i++) {
+		int len=lps[i - 1];
+		while(len>0 && pat[len]!=pat[i]) len=lps[len - 1];
+		lps[i] = pat[len]==pat[i] ? len+1 : 0;
+	}	
+	/* Match */
+	int i = 0, j = 0;
+	while (i < text.size() && j < pat.size()) {
+		if (text[i] == pat[j]) i++, j++;
+		else if (j == 0) i++;
+		else j = lps[j - 1];
 	}
-}
-/*以字串B匹配字串A，傳回匹配成功的數量(用B的fail)*/
-int kmp_match(char *A,int lenA,char *B,int lenB,int *fail){
-	int id=-1,ans=0;
-	for(int i=0;i<lenA;++i){
-		while(~id&&B[id+1]!=A[i])id=fail[id];
-		if(B[id+1]==A[i])++id;
-		if(id==lenB-1){/*匹配成功*/
-			++ans, id=fail[id];
-		}
-	}
-	return ans;
+	if (j >= pat.size()) return i - j;
+	return -1;
 }

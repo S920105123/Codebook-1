@@ -1,4 +1,4 @@
-# NTHU TEAM Made in Abyss Codebook
+# Steal from NTHU TEAM Made in Abyss Codebook
 ----
 [![Build Status](https://travis-ci.org/Jinkela-Xiao-Zuan-Feng-Mountaineer/Codebook.svg?branch=master)](https://travis-ci.org/Jinkela-Xiao-Zuan-Feng-Mountaineer/Codebook)
 

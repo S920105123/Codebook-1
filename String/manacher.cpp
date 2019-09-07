@@ -1,10 +1,24 @@
-//原字串: asdsasdsa 
-//先把字串變成這樣: @#a#s#d#s#a#s#d#s#a#
-void manacher(char *s,int len,int *z){
-	int l=0,r=0;
-	for(int i=1;i<len;++i){
-		z[i]=r>i?min(z[2*l-i],r-i):1;
-		while(s[i+z[i]]==s[i-z[i]])++z[i];
-		if(z[i]+i>r)r=z[i]+i,l=i;
-	}//ans = max(z)-1
+vector<int> d1(n); // Max len of palindrome centerred at s[i]
+for (int i = 0, l = 0, r = -1; i < n; i++) {
+    int k = (i > r) ? 1 : min(d1[l + r - i], r - i + 1);
+    while (0 <= i - k && i + k < n && s[i - k] == s[i + k]) {
+        k++;
+    }
+    d1[i] = k--;
+    if (i + k > r) {
+        l = i - k;
+        r = i + k;
+    }
+}
+vector<int> d2(n); // Max len of centerred at "gap" before s[i]
+for (int i = 0, l = 0, r = -1; i < n; i++) {
+    int k = (i > r) ? 0 : min(d2[l + r - i + 1], r - i + 1);
+    while (0 <= i - k - 1 && i + k < n && s[i - k - 1] == s[i + k]) {
+        k++;
+    }
+    d2[i] = k--;
+    if (i + k > r) {
+        l = i - k - 1;
+        r = i + k ;
+    }
 }

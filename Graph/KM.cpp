@@ -1,60 +1,53 @@
-#define MAXN 405
-#define INF 0x3f3f3f3f3f3f3f3f
-int n;// 1-base，0表示沒有匹配 
-LL g[MAXN][MAXN]; //input graph
-int My[MAXN],Mx[MAXN]; //output match
-LL lx[MAXN],ly[MAXN],pa[MAXN],Sy[MAXN];
-bool vx[MAXN],vy[MAXN];
-void augment(int y){
-	for(int x, z; y; y = z){
-		x=pa[y],z=Mx[x];
-		My[y]=x,Mx[x]=y;
-	}
+// Maximum Bipartite Weighted Matching (Perfect Match)
+static const int MXN = 650;
+static const int INF = 2147483647; // LL
+int n,match[MXN],vx[MXN],vy[MXN];
+int edge[MXN][MXN],lx[MXN],ly[MXN],slack[MXN];
+// ^^^^ LL
+void init(int _n){
+	n = _n;
+	for(int i=0; i<n; i++) for(int j=0; j<n; j++)
+		edge[i][j] = 0;
 }
-void bfs(int st){
-	for(int i=1; i<=n; ++i)
-		Sy[i] = INF, vx[i]=vy[i]=0;
-	queue<int> q; q.push(st);
-	for(;;){
-		while(q.size()){
-			int x=q.front(); q.pop();
-			vx[x]=1;
-			for(int y=1; y<=n; ++y) if(!vy[y]){
-				LL t = lx[x]+ly[y]-g[x][y];
-				if(t==0){
-					pa[y]=x;
-					if(!My[y]){augment(y);return;}
-					vy[y]=1,q.push(My[y]);
-				}else if(Sy[y]>t) pa[y]=x,Sy[y]=t;
+void addEdge(int x, int y, int w) // LL
+{ edge[x][y] = w; }
+bool DFS(int x){
+	vx[x] = 1;
+	for (int y=0; y<n; y++){
+		if (vy[y]) continue;
+		if (lx[x]+ly[y] > edge[x][y]){
+		  slack[y]=min(slack[y], lx[x]+ly[y]-edge[x][y]);
+		} else {
+			vy[y] = 1;
+			if (match[y] == -1 || DFS(match[y]))
+    { match[y] = x; return true; }
+		}
+	}
+	return false;
+}
+int solve(){
+	fill(match,match+n,-1);
+	fill(lx,lx+n,-INF); fill(ly,ly+n,0);
+	for (int i=0; i<n; i++)
+		for (int j=0; j<n; j++)
+			lx[i] = max(lx[i], edge[i][j]);
+	for (int i=0; i<n; i++){
+		fill(slack,slack+n,INF);
+		while (true){
+			fill(vx,vx+n,0); fill(vy,vy+n,0);
+			if ( DFS(i) ) break;
+			int d = INF; // long long
+			for (int j=0; j<n; j++)
+				if (!vy[j]) d = min(d, slack[j]);
+			for (int j=0; j<n; j++){
+				if (vx[j]) lx[j] -= d;
+				if (vy[j]) ly[j] += d;
+				else slack[j] -= d;
 			}
 		}
-		LL cut = INF;
-		for(int y=1; y<=n; ++y)
-			if(!vy[y]&&cut>Sy[y]) cut=Sy[y];
-		for(int j=1; j<=n; ++j){
-			if(vx[j]) lx[j] -= cut;
-			if(vy[j]) ly[j] += cut;
-			else Sy[j] -= cut;
-		}
-		for(int y=1; y<=n; ++y){
-			if(!vy[y]&&Sy[y]==0){
-				if(!My[y]){augment(y);return;}
-				vy[y]=1, q.push(My[y]);
-			}
-		}
 	}
-}
-LL KM(){
-	memset(My,0,sizeof(int)*(n+1));
-	memset(Mx,0,sizeof(int)*(n+1));
-	memset(ly,0,sizeof(LL)*(n+1));
-	for(int x=1; x<=n; ++x){
-		lx[x] = -INF;
-		for(int y=1; y<=n; ++y)
-			lx[x] = max(lx[x],g[x][y]);
-	}
-	for(int x=1; x<=n; ++x) bfs(x);
-	LL ans = 0;
-	for(int y=1; y<=n; ++y) ans+=g[My[y]][y];
-	return ans;
+	int res=0;
+	for (int i=0; i<n; i++)
+		res += edge[match[i]][i];
+	return res;
 }

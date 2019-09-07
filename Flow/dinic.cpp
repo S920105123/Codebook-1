@@ -1,62 +1,75 @@
-template<typename T>
-struct DINIC{
-	static const int MAXN=105;
-	static const T INF=INT_MAX;
-	int n, LV[MAXN], cur[MAXN];
-	struct edge{
-		int v,pre;
-		T cap,r;
-		edge(int v,int pre,T cap):v(v),pre(pre),cap(cap),r(cap){}
-	};
-	int g[MAXN];
-	vector<edge> e;
-	void init(int _n){
-		memset(g,-1,sizeof(int)*((n=_n)+1));
-		e.clear();
-	}
-	void add_edge(int u,int v,T cap,bool directed=false){
-		e.push_back(edge(v,g[u],cap));
-		g[u]=e.size()-1;
-		e.push_back(edge(u,g[v],directed?0:cap));
-		g[v]=e.size()-1;
-	}
-	int bfs(int s,int t){
-		memset(LV,0,sizeof(int)*(n+1));
-		memcpy(cur,g,sizeof(int)*(n+1));
-		queue<int> q;
-		q.push(s);
-		LV[s]=1;
-		while(q.size()){
-			int u=q.front();q.pop();
-			for(int i=g[u];~i;i=e[i].pre){
-				if(!LV[e[i].v]&&e[i].r){
-					LV[e[i].v]=LV[u]+1;
-					q.push(e[i].v);
-					if(e[i].v==t)return 1;
-				}
-			}
-		}
-		return 0;
-	}
-	T dfs(int u,int t,T CF=INF){
-		if(u==t)return CF;
-		T df;
-		for(int &i=cur[u];~i;i=e[i].pre){
-			if(LV[e[i].v]==LV[u]+1&&e[i].r){
-				if(df=dfs(e[i].v,t,min(CF,e[i].r))){
-					e[i].r-=df;
-					e[i^1].r+=df;
-					return df;
-				}
-			}
-		}
-		return LV[u]=0;
-	}
-	T dinic(int s,int t,bool clean=true){
-		if(clean)for(size_t i=0;i<e.size();++i)
-			e[i].r=e[i].cap;
-		T ans=0, f=0;
-		while(bfs(s,t))while(f=dfs(s,t))ans+=f;
-		return ans;
-	}
+struct Edge{
+    int f,to,rev;
+    T c;
+    Edge(int _to,int _r,T _c):to(_to),rev(_r),c(_c){}
 };
+
+// IMPORETANT
+// maxn is the number of vertices in the graph
+// Not the N in the problem statement!!
+vector<Edge> G[maxn];
+int level[maxn],st, end, n;
+int cur[maxn];
+ 
+void init(int _n){
+    n = _n;
+    for(int i=0; i<=n; i++) G[i].clear();
+}
+
+void addEdge(int f,int t,T c, bool directed){
+    int r1 = G[f].size(), r2 = G[t].size();
+    G[f].push_back(Edge(t,r2,c));
+    G[t].push_back(Edge(f,r1,directed?0:c));
+}
+
+bool BFS(int s,int t){
+    queue<int> Q;
+    for(int i=0; i<=n; i++) level[i] = 0;
+    level[s] = 1;
+    Q.push(s);
+    while(!Q.empty()){
+        int x = Q.front(); Q.pop();
+        for(int i=0; i<G[x].size(); i++){
+            Edge e = G[x][i];
+            if(e.c==0 || level[e.to]) continue;
+            level[e.to] = level[x] + 1;
+            Q.push(e.to);
+        }
+    }
+    return level[t]!=0;
+}
+
+T DFS(int s,T cur_flow){ // can't exceed c
+    if(s==end) return cur_flow;
+    T ans = 0, temp, total = 0;
+    for(int& i=cur[s]; i<G[s].size(); i++){
+        Edge &e = G[s][i];
+        if(e.c==0 || level[e.to]!=level[s]+1) continue;
+        temp = DFS(e.to, min(e.c, cur_flow));
+        if(temp!=0){
+            e.c -= temp;
+            G[e.to][e.rev].c += temp;
+            cur_flow -= temp;
+            total += temp;
+            if(cur_flow==0) break;
+        }
+    }
+    return total;
+}
+
+T maxFlow(int s,int t){
+	/* If you want to incrementally doing maxFlow, 
+	   you need to add the result manually.
+	   This function returns difference in that case. */
+    T ans = 0;
+    st = s, end = t;
+    while(BFS(s,t)){
+        while(true) {
+            memset(cur, 0, sizeof(cur));
+            T temp = DFS(s,INF);
+            if(temp==0) break;
+            ans += temp;
+        }
+    }
+    return ans;
+}
