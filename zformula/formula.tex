@@ -14,7 +14,8 @@
 	\end {enumerate}
 \item 滿足floor(n/i)=k之最大i: floor(n/k)
 \item 尤拉函數: phi(n)=n乘上所有(1-1/p)，對n之所有質因數p
-\item 費馬小定理: $a * a^(p-2) = 1 (mod p)$, a,p互質
+\item 尤拉定理: $a^phi(n) = 1 (mod n)$, a,n互質
+\item 尤拉降冪: $a^b = a^{b%phi(n)+phi(n)} (mod n)$, b>phi(n), 不必互質
 \item 次方同餘定理: $a^k mod p = (a mod p)^(k mod p-1)$ p是質數
 \item Modulo inverse: inv[i] = - floor(p / i) * inv[p % i] (mod p)
 \item 中國剩餘定理: x=Ai(mod mi), mi互質, Mi=所有m的乘積/mi, Ti=$Mi^-1$(mod mi), 則x=sigma(Mi*Ti*Ai)(mod M)
@@ -33,6 +34,8 @@
 \item 最大匹配=最大流(二分圖)
 \item 最大匹配=最小點覆蓋(二分圖)
 \item 最小點覆蓋+最小邊覆蓋=V(數值，二分圖)
+\item 二分圖帶權最小點覆蓋 = 對左邊的點v連cap(src,v)=w(v)之邊，右邊每個v連cap(v,tgt)=w(v)之邊，每條邊(u,v)連cap(u,v)=INF，最大流即為所求。
+\item 一般圖帶權最小邊覆蓋 = (將原圖每個w(u,v)改為w'(u,v)=c(u)+c(v)-w(u,v))，所求為新圖之最大權匹配+sigma\{c(v)\}，c(v)為點v連到的最小edge權重。
 
 \item 一矩陣A所有eigen value之合=對角線合
 \item 一矩陣A所有eigen value之積=det(A)
@@ -68,6 +71,10 @@
 	\item $I(G)=Cv(G)$
 	\item $M(G)=Ce(G)$
 	\end{enumerate}
+\item 不相交環覆蓋: 每個v拆vin, vout, 存在 iff. 二分完美匹配存在, 最小邊權環覆蓋=最小完美匹配
+\item vertex disjoint DAG path cover (蓋住所有點): 每個v拆vin, vout, 原圖|V|-|最大二分匹配|即為所求
+\item 可相交DAG path cover: 每個v對他能走到的所有點u連一條邊, 轉為disjoint. (轉換後所有中途點毋須存在)
+\item max anti-chain over partial order (最大subset任兩人不可比較): 建出partial order的transitive closure, disjoint DAG path cover即為所求.
 \item 最大權閉合圖：
 	\begin{enumerate}\itemsep = -3pt
 	\item $C(u,v)=\infty ,(u,v)\in E$
