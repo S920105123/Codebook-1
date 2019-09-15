@@ -31,10 +31,10 @@
 \item 最小邊覆蓋: 邊的集合，所有點都被覆蓋
 \item 最大獨立集+最小點覆蓋=V(數值)
 \item 最大匹配+最小邊覆蓋=V(數值)
-\item 最大匹配=最大流(二分圖)
+\item 最大匹配=最大流(directed, 二分圖)
 \item 最大匹配=最小點覆蓋(二分圖)
 \item 最小點覆蓋+最小邊覆蓋=V(數值，二分圖)
-\item 二分圖帶權最小點覆蓋 = 對左邊的點v連cap(src,v)=w(v)之邊，右邊每個v連cap(v,tgt)=w(v)之邊，每條邊(u,v)連cap(u,v)=INF，最大流即為所求。
+\item 二分圖帶權最小點覆蓋 = 對左邊的點v連cap(src,v)=w(v)之邊，右邊每個v連cap(v,tgt)=w(v)之邊，每條邊(u,v)連cap(u,v)=INF，皆有向，最大流即為所求。
 \item 一般圖帶權最小邊覆蓋 = (將原圖每個w(u,v)改為w'(u,v)=c(u)+c(v)-w(u,v))，所求為新圖之最大權匹配+sigma\{c(v)\}，c(v)為點v連到的最小edge權重。
 
 \item 一矩陣A所有eigen value之合=對角線合
@@ -45,6 +45,7 @@
 \item a/sinA = b/sinB = c/sinC = 2R, R為外接圓半徑
 \item 內接圓半徑=2*area/(a+b+c)
 \item 外接圓半徑=abc/4*area
+\item 球缺體積, h為高, h <= R: PI*h^2*(R-h/3)
 
 \item 枚舉submask: for (int s=m; s; s=(s-1)\&m) // Take care of ZERO by yourself
 

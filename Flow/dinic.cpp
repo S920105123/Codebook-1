@@ -16,7 +16,7 @@ void init(int _n){
     for(int i=0; i<=n; i++) G[i].clear();
 }
 
-void addEdge(int f,int t,T c, bool directed){
+void add_edge(int f,int t,T c, bool directed){
     int r1 = G[f].size(), r2 = G[t].size();
     G[f].push_back(Edge(t,r2,c));
     G[t].push_back(Edge(f,r1,directed?0:c));
@@ -57,7 +57,7 @@ T DFS(int s,T cur_flow){ // can't exceed c
     return total;
 }
 
-T maxFlow(int s,int t){
+T max_flow(int s,int t){
 	/* If you want to incrementally doing maxFlow, 
 	   you need to add the result manually.
 	   This function returns difference in that case. */
