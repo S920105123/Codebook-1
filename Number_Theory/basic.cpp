@@ -74,23 +74,6 @@ LL invtable(int n,LL P){
 		inv[i]=(P-(P/i))*inv[P%i]%P;
 }
 
-LL log_mod(const LL &a, const LL &b, const LL &p) {
-	// a ^ x = b ( mod p )
-	int m=sqrt(p+.5), e=1;
-	LL v=inv(modexp(a,m,p), p);
-	map<LL,int> x;
-	x[1]=0;
-	for(int i=1;i<m;++i) {
-		e = LLmul(e,a,p);
-		if(!x.count(e)) x[e] = i;
-	}
-	for(int i=0;i<m;++i) {
-		if(x.count(b)) return i*m + x[b];
-		b = LLmul(b,v,p);
-	}
-	return -1;
-}
-
 LL Tonelli_Shanks(const LL &n, const LL &p) {
 	// x^2 = n ( mod p )
 	if(n==0) return 0;
