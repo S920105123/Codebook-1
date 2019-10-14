@@ -25,6 +25,7 @@
 \item Sigma\{i : gcd(i,n) = 1 and i in [1, n]\} = n*phi(n)/2 for n > 1
 \item $Sigma\{i * r^i : i in [1, n]\} = (n*r^(n+1) - r*(r^n-1)/(r-1)) / (r-1)$
 \item 投擲正面機率$p$之硬幣$n$次，正面偶數次機率: $0.5 + 0.5*(1-2p)^n$
+\item 分式拆分: (a - b)/(ab) = 1/b - 1/a
 
 \item 最大獨立集: 點的集合，其內點不相鄰
 \item 最小點覆蓋: 點的集合，所有邊都被覆蓋
@@ -242,11 +243,21 @@ sin\theta &  cos\theta
 		\item Odd:$a_n-\sum_{i=1}^{n/2}a_ia_{n-i}$
 		\item Even:$Odd+\frac{1}{2}a_{n/2}(a_{n/2}+1)$
 	\end{enumerate}
-	\item Spanning Tree
+	\item Spanning Tree (for n labeled vertices)
 	\begin{enumerate}\itemsep = -2pt
 		\item 完全圖$n^n-2$
+		\item 完全二分圖$K_{n,m}$: $m^{n-1} \times n^{m-1}$
 		\item 一般圖(Kirchhoff's theorem)$M[i][i]=degree(V_i)$,$M[i][j]=-1$,if have $E(i,j)$,$0$ if no edge. delete any one row and col in $A$, $ans = det(A)$
 	\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Horrible bugs}
+\begin{enumerate}\itemsep = -3pt
+	\item int開成bool導致計算出錯或其他型別開錯導致cin出錯
+	\item cmp寫成非嚴格偏序
+	\item 該開multiset不小心開成set
+	\item 該開multiset不小心開成set
+	\item 現在就去生一些有相同物的case或邊界條件\= \=
 \end{enumerate}
 
 %\end{document}

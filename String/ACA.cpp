@@ -16,7 +16,7 @@ int new_node(int p) {
 	return n++;
 }
 void build(vector<string> &dict) {
-	// Some init should be written in new_node.
+	// Some init should be written in new_node, O(N*SIGMA).
 	n = 0;
 	new_node(0);
 	for (int i = 0; i < dict.size(); i++) {
