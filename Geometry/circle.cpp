@@ -23,28 +23,51 @@ vector<Line> tangents(Circle a, Circle b) {
         ans[i].c -= ans[i].a * a.c.x + ans[i].b * a.c.y;
     return ans;
 }
-// Circle-line intersection
-double r, a, b, c; // input, circle:((0,0),r), line:ax+by+c=0
-double x0 = -a*c/(a*a+b*b), y0 = -b*c/(a*a+b*b);
-if (c*c > r*r*(a*a+b*b)+EPS)
-    puts ("no points");
-else if (abs (c*c - r*r*(a*a+b*b)) < EPS) {
-    puts ("1 point");
-    cout << x0 << ' ' << y0 << '\n';
+// Circle-line intersection, line:ax+by+c=0
+vector<Point> CL_intersection(Circle cir, Line li) {
+	// li.pton(); // To Ax+By+C=0
+	Point o = cir.c;
+	li.c += li.a*o.x + li.b*o.y; // Shift w.r.t. cir.c
+	
+	vector<Point> res;
+	double r = cir.r, a = li.a, b = li.b, c = li.c;
+	double x0 = -a*c/(a*a+b*b), y0 = -b*c/(a*a+b*b);
+	if (c*c > r*r*(a*a+b*b)+EPS) {
+		return res; // No point
+	}
+	else if (abs(c*c - r*r*(a*a+b*b)) < EPS) {
+		res.push_back({x0 + o.x, y0 + o.y}); // 1 point
+	}
+	else {
+	    double d = r*r - c*c/(a*a+b*b);
+	    double mult = sqrt (d / (a*a+b*b));
+	    double ax, ay, bx, by;
+	    ax = x0 + b * mult;
+	    bx = x0 - b * mult;
+	    ay = y0 - a * mult;
+	    by = y0 + a * mult;
+	    res.push_back({ax + o.x, ay + o.y}); // 2 points
+	    res.push_back({bx + o.x, by + o.y});
+	}
+	return res;
 }
-else {
-    double d = r*r - c*c/(a*a+b*b);
-    double mult = sqrt (d / (a*a+b*b));
-    double ax, ay, bx, by;
-    ax = x0 + b * mult;
-    bx = x0 - b * mult;
-    ay = y0 - a * mult;
-    by = y0 + a * mult;
-    puts ("2 points");
-    cout << ax << ' ' << ay << '\n' << bx << ' ' << by << '\n';
-}
+
 // Circle-circle intersection
-// Circle ((0,0),r1) and ((x2,y2),r2)
-// Then reduce to circle 1 intersect with line Ax+By+C
-// A=-2*x_2, B=-2*y_2, C=(x_2)^2+(y_2)^2+(r_1)^2-(r_2)^2
-// Special case: two circle are the same => inf points
+vector<Point> CC_intersection(Circle a, Circle b) {
+	if (a.c.x == b.c.x && a.c.y == b.c.y && a.r == b.r) {
+		return vector<Point>(); // coincide, inf points
+	}
+	Point o = a.c;
+	b.c = b.c - o; // Shift
+	a.c = {0.0, 0.0};
+	
+	double x2 = b.c.x, y2 = b.c.y, r1 = a.r, r2 = b.r;
+	Line li = {-2*x2, -2*y2, x2*x2 + y2*y2 + r1*r1 - r2*r2}; // Ax+By+C = 0
+	vector<Point> res = CL_intersection(a, li);
+	for (Point &p : res) {
+		p.x += o.x;
+		p.y += o.y;
+	}
+	
+	return res;
+}

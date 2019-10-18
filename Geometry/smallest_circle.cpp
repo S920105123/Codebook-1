@@ -7,7 +7,7 @@ PT circumcenter(CPT &a,CPT &b,CPT &c){
 }
 void solve(PT p[],int n,PT &c,T &r2){
 	random_shuffle(p,p+n);
-	c=p[0]; r2=0; // c,r2 = ??,????
+	c=p[0]; r2=0; // c,r2 = center,radius square
 for(int i=1;i<n;i++)if((p[i]-c).abs2()>r2){
 		c=p[i]; r2=0;
 for(int j=0;j<i;j++)if((p[j]-c).abs2()>r2){
