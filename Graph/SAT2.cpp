@@ -3,6 +3,10 @@ bool vis[MAXV*2], sol[MAXV]; // 1 if i is true
 vector<int> stk, G[MAXV*2], Gr[MAXV*2];
 void init(int _N) {
 	N = _N;
+	for (int i = 0; i <= N; i++) {
+		G[i].clear();
+		Gr[i].clear();
+	}
 }
 int get_not(int x) {
 	return x <= N ? x + N : x - N;
@@ -34,6 +38,7 @@ void rdfs(int v, int root) {
 }
 bool solve() {
 	int V = 2 * N;
+	stk.clear();
 	fill(vis, vis + V + 1, 0);
 	fill(sid, sid + V + 1, 0);
 	for (int i = 1; i <= V; i++) {
