@@ -128,13 +128,13 @@ T crt(vector<T> &m,vector<T> &a){
 	for(int i=0;i<(int)a.size();++i){
 		tM=M/m[i];
 		ans=(ans+(a[i]*tM%M)*pow_mod(tM,Euler(m[i])-1,m[i])%M)%M;
-		/*如果m[i]是質數，Euler(m[i])-1=m[i]-2，就不用算Euler了*/
+		/* If m is prime, Euler(m[i])-1=m[i]-2, or use extgcd? */
 	}
 	return ans;
 }
 
 //java code
-//求sqrt(N)的連分數
+//continued fraction of sqrt(n)
 public static void Pell(int n){
 	BigInteger N,p1,p2,q1,q2,a0,a1,a2,g1,g2,h1,h2,p,q;
 	g1=q2=p1=BigInteger.ZERO;
