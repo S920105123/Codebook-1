@@ -41,12 +41,10 @@ struct Line {
 		b=p2.x-p1.x;
 		c=-a*p1.x-b*p1.y;
     }
-	int relation(const Point &p) {
-		// For line, 0 if point on line
-		// -1 if left, 1 if right
-		Point dir=p2-p1;
-		double crs=dir.cross(p-p1);
-		return crs==0?0:crs<0?-1:1;
+	double ori(const Point &p) {
+		// For directed line, 0 if point on line
+		// >0 if left, <0 if right
+		return (p2-p1).cross(p-p1);
 	}
 	Point normal() { // normal vector to the left.
 		Point dir=p2-p1;
@@ -85,7 +83,7 @@ struct Line {
 			if(p2==s.p1&&(p1-p2).dot(s.p2-p2)<=0)return 1;
 			if(p2==s.p2&&(p1-p2).dot(s.p1-p2)<=0)return 1;
 			return -1;
-		}else if(c1*c2<=0&&c3*c4<=0)return 1;
+		}else if(c1*c2<=0&&c3*c4<=0)return 1; // Be aware overflow 
 		return 0;
 	}
 	Point intersection(Line l) {
@@ -124,7 +122,6 @@ struct Line {
 
 template<typename T>
 struct polygon{
-	polygon(){}
 	vector<point<T> > p;//counterclockwise
 	T area()const{
 		T ans=0;

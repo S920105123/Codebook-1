@@ -167,7 +167,8 @@ sin\theta &  cos\theta
 	\item $\sum_{d|n} \mu (n)=[n==1]$
 	\item $g(m)=\sum_{d|m}f(d)\Leftrightarrow f(m)=\sum_{d|m}\mu (d) \times g(m/d)$
 	\item $\sum_{i=1}^n\sum_{j=1}^m$互質數量$=\sum \mu (d)\left \lfloor \frac{n}{d} \right \rfloor \left \lfloor \frac{m}{d} \right \rfloor$
-	\item $\sum_{i=1}^n\sum_{j=1}^nlcm(i,j)=n\sum_{d|n} d \times \phi (d)$
+	\item Useful strate: Enumerate $(i, j)$ having common factor $d$ then inclusion exclusion. (for all pair gcd sum / number of coprime pairs)
+	\item Useful strate: For each $i$, first pick a smaller $j$ for a coprime pair $(i, j)$, then used to form pairs with larger gcd. (for all pair lcm / gcd sum)
 \end{enumerate}
 
 \subsubsection{排組公式}

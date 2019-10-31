@@ -2,8 +2,8 @@ int N, sid[MAXV*2]; // all 1-based
 bool vis[MAXV*2], sol[MAXV]; // 1 if i is true
 vector<int> stk, G[MAXV*2], Gr[MAXV*2];
 void init(int _N) {
-	N = _N;
-	for (int i = 0; i <= N; i++) {
+	N = _N; // number of variable 
+	for (int i = 0; i <= 2 * N; i++) {
 		G[i].clear();
 		Gr[i].clear();
 	}
