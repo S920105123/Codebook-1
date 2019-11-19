@@ -1,12 +1,12 @@
-//n個點，其中r個要構成斯坦納樹
-//答案在max(dp[(1<<r)-1][k]) k=0~n-1
-//p表示要構成斯坦納樹的點集
+//n vertices, r of them must compose Steiner tree
+//Answer: max(dp[(1<<r)-1][k]) k=0~n-1
+//p: optimal vertex set
 //O( n^3 + n*3^r + n^2*2^r )
 #define REP(i,n) for(int i=0;i<(int)n;++i)
 const int MAXN=30,MAXM=8;// 0-base
 const int INF=0x3f3f3f3f;
 int dp[1<<MAXM][MAXN];
-int g[MAXN][MAXN];//圖
+int g[MAXN][MAXN];//Adjacency matrix
 void init(){memset(g,0x3f,sizeof(g));}
 void add_edge(int u,int v,int w){
 	g[u][v]=g[v][u]=min(g[v][u],w);

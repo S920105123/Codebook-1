@@ -12,7 +12,7 @@ struct zhu_liu{
 			if(r)r->tag+=tag;
 			tag=0;
 		}
-	}mem[MAXM];//靜態記憶體
+	}mem[MAXM];//Static memory
 	node *pq[MAXN*2],*E[MAXN*2];
 	int st[MAXN*2],id[MAXN*2],m;
 	void init(int n){
@@ -57,6 +57,6 @@ struct zhu_liu{
 				id[find(i,id)]=N;
 			}else st[find(i,st)]=find(E[i]->u,st),--all;
 		}
-		return all==1?ans:-INT_MAX;//圖不連通就無解 
+		return all==1?ans:-INT_MAX;//No solution if not connected.
 	}
 };
