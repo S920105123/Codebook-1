@@ -1,6 +1,6 @@
 vector<int> lps; // longest prefix suffix, 0-based
-int match(const string &text, const string &pat) {
-	/* Init is included */
+vector<int> match(const string &text, const string &pat) {
+	/* Find all match */
 	lps.resize(pat.size());	
 	/* DP */
 	lps[0]=0;
@@ -11,11 +11,19 @@ int match(const string &text, const string &pat) {
 	}	
 	/* Match */
 	int i = 0, j = 0;
-	while (i < text.size() && j < pat.size()) {
-		if (text[i] == pat[j]) i++, j++;
+	vector<int> occ;
+	while (i < text.size()) {
+		if (text[i] == pat[j]) {
+			i++;
+			j++;
+			if (j == pat.size()) {
+				// Find one pattern at text[i-j...i)
+				occ.push_back(i - j);
+				j = lps[j - 1];
+			}
+		}
 		else if (j == 0) i++;
 		else j = lps[j - 1];
 	}
-	if (j >= pat.size()) return i - j;
-	return -1;
+	return occ;
 }

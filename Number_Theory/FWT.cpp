@@ -1,3 +1,6 @@
+// Just as FFT, first transform to get WH(?) form.
+// Then multiply each term to get convolution under such form.
+// Then inverse transform to get convolution.
 vector<int> F_OR_T(vector<int> f, bool inverse){
 	for(int i=0; (2<<i)<=f.size(); ++i) 
 		for(int j=0; j<f.size(); j+=2<<i) 
