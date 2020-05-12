@@ -9,7 +9,7 @@ void init(int _N) {
 	}
 }
 int get_not(int x) {
-	return x <= N ? x + N : x - N;
+	return x <= N ? x + N : x - N; // Note when 0-based
 }
 void add_edge(int x, int y) {
 	G[x].push_back(y);
