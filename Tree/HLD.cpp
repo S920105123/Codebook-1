@@ -1,15 +1,16 @@
-// In this template value is on the edge, everything is 1-based
-int N;
-vector<Edge> G[MAXN+5];
+// To use it, call init_HLD
+// In this template value is on the vertex, everything is 1-based
+int n, qn, wei[MAXN];
+vector<int> G[MAXN];
  
 // Preprocess info, setup in dfs1
-int heavy[MAXN+5], pa_w[MAXN+5], sz[MAXN+5];
-int pa[MAXN+5], dep[MAXN+5], recorder[MAXN+5]; // Which node record edge i.
+int heavy[MAXN], sz[MAXN];
+int pa[MAXN], dep[MAXN]; // Which node record edge i.
  
 // HLD info, setup in build, 1-based
 // pos: position of node i in seg tree.
-// head: For NODE i, points to head of the chain.
-int chain_no, border, pos[MAXN+5], head[MAXN+5];
+// head: For NODE i, points to head of the chain. Head will have smallest pos[v] in the chain.
+int chain_no, border, pos[MAXN], head[MAXN];
  
 void dfs1(int v, int p) {
     pa[v] = p;
@@ -17,14 +18,12 @@ void dfs1(int v, int p) {
     dep[v] = dep[p] + 1;
     heavy[v] = -1;
     
-    for (const Edge &e : G[v]) {
-        if (e.to == p) continue;
-        dfs1(e.to, v);
-        pa_w[e.to] = e.w;
-        recorder[e.id] = e.to;
-        sz[v] += sz[e.to];
-        if (heavy[v] == -1 || sz[e.to] > sz[heavy[v]]) {
-            heavy[v] = e.to;
+    for (const int to : G[v]) {
+        if (to == p) continue;
+        dfs1(to, v);
+        sz[v] += sz[to];
+        if (heavy[v] == -1 || sz[to] > sz[heavy[v]]) {
+            heavy[v] = to;
         }
     }
 }
@@ -32,34 +31,34 @@ void dfs1(int v, int p) {
 void build(int v, int chain_head) {
     pos[v] = ++border;
     head[v] = chain_head;
-    tree.update(pos[v], pa_w[v], 1, N, 1);
+    tree.update(pos[v], pos[v], wei[v], 1, n, 1);
     
     if (heavy[v] != -1) build(heavy[v], chain_head);
-    for (const Edge &e : G[v]) {
-        if (e.to == pa[v] || e.to == heavy[v]) continue;
-        build(e.to, e.to);
+    for (int to : G[v]) {
+        if (to == pa[v] || to == heavy[v]) continue;
+        build(to, to);
     }
-}
- 
-void init_HLD() {
-    /* Only init used data, be careful. */
-    /* Does not init G!!!!! */
-    border = dep[1] = pa_w[1] = 0;
-    dfs1(1, 1);
-    build(1, 1);
 }
  
 int query_up(int a, int b) {
     int ans = 0;
     while (head[a] != head[b]) {
     	if (dep[head[a]] < dep[head[b]]) swap(a, b);
-    	ans = max(ans, tree.query(pos[head[a]], pos[a], 1, N, 1));
+    	ans = max((LL)ans, tree.query(pos[head[a]], pos[a], 1, n, 1).val);
     	a = pa[head[a]];
 	}
 	
-    if (a == b) return ans;
-    if (dep[a] < dep[b]) swap(a, b);
-    // Query range is pos[b] if value is on node.
-    ans = max(ans, tree.query(pos[b] + 1, pos[a], 1, N, 1));
+	// Change this section when weights are on edges.
+	// If a == b, do nothing. otherwise, range is [pos[a]+1, pos[b]].
+    if (dep[a] > dep[b]) swap(a, b);
+    ans = max((LL)ans, tree.query(pos[a], pos[b], 1, n, 1).val);
     return ans;
+}
+ 
+void init_HLD(int n) { 
+	// Assumes the graph G is already setup.
+	tree.init(1, n, 1); // Optional
+    border = dep[1] = 0;
+    dfs1(1, 1);
+    build(1, 1);
 }
